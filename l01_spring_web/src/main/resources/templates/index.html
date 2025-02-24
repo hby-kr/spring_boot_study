@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>스프링 부트</title>
+</head>
+
+
+
+<body>
+
+<h1>스프링 부트</h1>
+
+<p>resources/template/ 하위에 있는 모든 html은 타임리프Thymeleaf다. </p>
+<!--
+타임리프는 자바 기반의 서버사이드 템플릿 엔진입니다.
+HTML 파일을 동적으로 생성하거나 데이터를 바인딩하는 데 사용됩니다. 주로 Spring Framework와 함께 많이 사용
+th 속성이 있으면, 서버에서 렌더링 후 html 응답한다.
+HTML5 문법을 그대로 사용하면서도, 서버 측에서 템플릿을 처리할 수 있기에 유용.
+
+스프링에서 template 하위 모든 html문서를 타임리프로 렌더링 후 응답하기로 약속해 놓았음
+
+- 타임리프Thymeleaf 입문 문법
+  ${}는 서버 사이드에서 평가된 변수 값을 HTML에 출력하거나 동적으로 삽입하는 데 사용됩니다.
+  {}는 URL이나 리소스 경로에서 변수 값을 대체할 때 사용되며, 동적으로 경로를 변경할 때 유용합니다.
+-->
+
+<h2> Conroller 서블릿 만들기</h2>
+
+<ul>
+    <!-- 예전에는 톰캣 하나에 여러 war(web archive)를 배포할 수 있어서 contextPath가 존재했지만
+     스프링 부트는 부트 앱 안에 서버 하나가 설치, 즉 1:1 대응이기 때문에 contextPath란 없다.
+     따라서 절대 경로와 상대경로의 경계가 사라지고, 루트경로를 마음대로 쓸 수 있음-->
+    <li><a href="/sum.do">sum.do 호출하기</a></li>
+    <li><a href="/sum.do?a=10&b=20">sum.do?a=10&b=20, a,b 호출</a></li>
+    <li><a href="/mult.do?x=33&y=55">mult.do?x=33&y=55 x,y 호출</a></li>
+    <li><a href="/minus.do?a=110&b=33">minus.do?a=110&b=33 호출</a></li>
+    <li><a href="/user.json"> ResponseBody 호출 (String)</a></li>
+    <li><a href="/userMap.json"> ResponseBody 호출 (Map)</a></li>
+    <li><a href="/userDto.json"> ResponseBody 호출 (Dto)</a></li>
+    <!--  Map 또는 Dto가 Json으로 출력(바인딩)하는 라이브러리가 jackson  -->
+</ul>
+
+<h2> 회원가입 폼 post로 Dto로 파라미터 파싱하기</h2>
+<form action="/signup.do" method="post">
+    <p><label>name<input type="text" name="name" value="경만"></label></p>
+    <p><label>age<input type="text" name="age" value="29"></label></p>
+    <p><label>name<input type="text" name="id" value="kmdev"></label></p>
+    <p><label>pw<input type="text" name="pw" value="1234"></label></p>
+    <p><label>bday<input type="text" name="birthday" value="2000-10-22"></label></p>
+    <p><button type="submit">제출</button></p>
+</form>
+</body>
+</html>
+
+<!--
+라이브러리와 프레임워크의 차이
+
+
+라이브러리 (Library)
+   - 다운받아서 개발자가 적용하여 사용하는 것이 라이브러리
+   라이브러리는 특정 기능을 수행하는 코드 모음입니다.
+   개발자가 필요한 기능을 사용할 수 있도록 제공되며, 라이브러리를 필요할 때 호출해서 사용하는 형태.
+      jQuery: DOM을 조작하거나 이벤트를 처리하는 기능을 제공하는 라이브러리.
+      NumPy: 파이썬에서 수학적 계산을 도와주는 라이브러리.
+
+프레임워크 (Framework)
+   - 프레임워크는 웹앱을 프레임워크 안에 넣어서 프레임워크의 구조와 돌아가는 규칙 안에서 돌리는 것.
+   - (라이브러리를 쓰겠다면 프레임워크가 그 라이브러리를 제공하는지 안하는지 확인하고 써야한다.)
+   - 프레임워크는 애플리케이션을 만들 때 기본적인 골격이나 구조를 제공하는 틀
+   프레임워크는 개발자가 필요한 기능을 구현할 수 있도록 여러 가지 도구와 규칙을 제공하며, 어플리케이션의 흐름을 제어.
+   프레임워크는 개발자가 아니라 프레임워크가 흐름을 제어합니다.
+   개발자는 프레임워크의 규칙에 맞게 필요한 부분을 구현해야 하며, 프레임워크는 그 틀 안에서 작업을 유도
+      Django: 파이썬으로 웹 애플리케이션을 구축할 때 사용하는 웹 프레임워크.
+      Angular: 자바스크립트 기반의 프레임워크로, 싱글 페이지 애플리케이션(SPA) 개발을 돕습니다.
+      Bootstrap부트스트랩: 웹 개발을 위한 프론트엔드 프레임워크로, 화면이 부트스트랩에 규칙에 따라 달라짐
+
+
+메이븐 (maven)
+- Maven은 프로젝트가 사용하는 라이브러리나 다른 프로젝트의 의존성 관리를 돕습니다.
+예를 들어, 프로젝트에서 JUnit 라이브러리를 사용하려면, pom.xml 파일에 해당 의존성을 추가하기만 하면 Maven이 자동으로 JUnit을 (user/.m/repository에) 다운로드하고 프로젝트에 주입injection하여 포함시킵니다.
+   메이븐과 비슷한 도구들.
+   Maven 외에도 Gradle, npm, Yarn, Pip, Composer, Bundler, Cargo 등 다양한 의존성 관리 도구들이 존재합니다.
+      Gradle: 빠르고 유연한 빌드 시스템, Groovy 또는 Kotlin DSL 사용.
+      Ivy: Apache Ant와 통합된 의존성 관리 도구.
+      npm: JavaScript/Node.js 프로젝트의 의존성 관리 및 패키지 관리.
+      Yarn: npm의 대안으로 빠르고 일관성 있는 의존성 관리.
+      Bundler: Ruby 프로젝트의 의존성 관리 도구.
+      Composer: PHP의 의존성 관리 및 패키지 관리 도구.
+
+
+
+ㅡㅡㅡㅡ
+객체지향(OOP)과 관점지향(AOP)
+
+>>> 객체지향의 한계
+    객체지향 프로그래밍(OOP)은 클래스와 객체를 중심으로 프로그램을 설계하는 방식
+    체지향의 핵심은 코드의 재사용성, 유지보수 용이성, 모듈화 등을 촉진하는 것이지만, 몇 가지 한계점도 있습니다.
+       - 객체지향언어(OOP)는 순서대로 동작하고, 사용하는 쪽에 꼭 객체를 매개변수로 사용해야햔다. ==> 서비스로직의 상대적으로 더 복잡해진다.(복잡성이 커진다)
+       - 서버 환경에서 객체를 복제하게 되면, 메모리 부족현상이 발생할 수 있다.  ==> 네트워크 상황에서 1만개의 동일한 요청이 와도, 객체를 1만개 만들어야 함.
+
+>>> 관점지향이란,
+    AOP는 공통 관심사를 하나의 측면(Aspect)으로 분리하여 처리하고, 이를 모듈화하는 방식
+    공통 기능을 하나의 관점으로 정의하고, 이를 애플리케이션의 다양한 부분에 적용
+    이렇게 하면 코드의 중복을 줄이고, 유지보수를 쉽게 할 수 있습니다.
+
+>>> 관점지향인 spring이 싫어하는 객체지향 문법
+   1. 상속(extends, implements)은 코드의 유연성을 떨어뜨린다. -> 어노테이션으로 해결한다.
+   2. 객체 생성을 하지 않는다. -> 수평적 서비스 구현 및 객체 생성으로 메모리 부족 현상을 해결한다.
+
+
+ㅡㅡㅡㅡ 스프링에 대하여
+
+>>>  스프링? 스프링부트?
+    - 스프링 프레임워크 = 스프링 웹앱(2010년 이전까지의 스프링 서비스);
+       예전에는 스프링 웹앱이 톰캣 서버와 따로 있고, 서로 소통하면서 작동시키는 방식(자바에 war로 설치)이었다면,
+    - 현재는 스프링 웹앱이 톰캣을 포함시켜서 자기 안에서 작동시킴(스프링은 자바 기반이라 jar로 설치). 이것이 스프링 부트임.
+       애플리케이션 자체에 웹 서버가 내장되어 있어서 별도로 외부 서버(Tomcat, Jetty, 등)를 설치하거나 설정할 필요 없이 애플리케이션을 실행할 때 서버가 자동으로 실행되는 방식
+    - 스프링 부트(Spring Boot)는 스프링 프레임워크(Spring Framework)의 하위 요소 중 하나로,
+    애플리케이션 개발을 간소화하고 빠르게 만들 수 있도록 돕는 도구.
+    - 스프링 프레임워크는 단순히 스프링 부트만 있는 것이 아니라,
+    스프링 보안, 스프링 데이터, 스프링 웹, 스프링 트랜잭션, 스프링 트랜잭션 등 다양한 하위 모듈을 통해 거의 모든 Java 애플리케이션의 요구사항을 지원
+
+    스프링의 가장 큰 특징 중 하나는 의존성 주입(Dependency Injection)입니다.
+    객체 간의 의존 관계를 외부에서 설정할 수 있도록 하여 코드의 결합도를 낮추고, 테스트와 유지보수하기 용이하게 만듭니다.
+    이를 통해 객체 생성 및 관리를 스프링 컨테이너가 담당하며, 개발자는 객체 간의 의존 관계를 쉽게 설정할 수 있습니다.
+
+>>>  bean과 container
+- Bean은 스프링 컨테이너에 의해 생성되고 초기화되고 관리되고 주입되는 객체입니다. @Component 애너테이션을 통해 스프링 빈으로 등록됩니다.
+- 스프링 컨테이너container는 애플리케이션에서 빈 객체들을 생성하고 관리하는 핵심 역할.
+    컨테이너는 애플리케이션의 생명주기(lifecycle)를 관리함 즉 빈 객체의 생성, 의존성 주입, 초기화, 소멸 등을 담당
+
+
+ㅡㅡㅡㅡ 스프링 애너테이션
+스프링 애너테이션은 주로 빈 등록, 의존성 주입, AOP(Aspect-Oriented Programming) 등을 간소화하고, 자동 설정을 제공
+
+>  어노테이션도 계층이 있음.
+    상위 어노테이션은 주로 메타 어노테이션으로 불리며, 이는 다른 어노테이션을 정의하거나 구성하는 데 사용
+    @Component: 다른 구체화된 어노테이션(@Service, @Repository, @Controller)의 기반이 되는 일반적인 상위 어노테이션입니다.
+    @Configuration: @Bean 어노테이션을 포함하는 설정 클래스를 정의하는 데 사용됩니다.
+    @EnableAutoConfiguration: 자동 구성 기능을 활성화하는 데 사용되는 상위 어노테이션입니다.
+    @SpringBootApplication: 여러 스프링 부트 어노테이션(@EnableAutoConfiguration, @ComponentScan, @Configuration)을 결합하여 단일 어노테이션으로 제공하는 상위 어노테이션입니다.
+
+>  어노테이션은 사용되는 위치가 다름
+어노테이션이 클래스 앞에 쓰이느냐, 메서드 앞에 쓰이느냐에 따라 그 역할과 적용 범위가 달라짐
+클래스 앞, 메서드 앞, 매개변수 앞, 필드 앞
+
+    1) 클래스 앞에 쓰는 어노테이션:
+        클래스를 특정 역할이나 특성으로 지정하여, 스프링 컨테이너가 이 클래스를 관리하고, 적절한 컨텍스트에서 사용할 수 있도록 합니다.
+        예시: @Component, @Service, @Repository, @Controller, @Configuration, @RestController 등.
+            @Component: 스프링 컨테이너가 자동으로 탐지하고 관리할 수 있는 클래스를 표시합니다.
+                @Service: 서비스 계층을 나타내며, 비즈니스 로직을 구현하는 클래스에 사용됩니다.
+                @Repository: 데이터 접근 계층을 나타내며, 데이터베이스와의 상호 작용을 담당하는 클래스에 사용됩니다.
+                @Controller: 웹 계층을 나타내며, 웹 요청을 처리하는 클래스에 사용됩니다.
+            @RestController: @Controller와 @ResponseBody를 결합하여 RESTful 웹 서비스를 만들 때 사용됩니다.
+            @Configuration: 자바 클래스가 하나 이상의 @Bean 메서드를 선언하여 스프링 IoC 컨테이너를 설정함을 나타냅니다.
+            @Scope: 빈의 스코프를 설정하는 데 사용됩니다.
+            @Profile: 특정 프로파일이 활성화될 때만 빈이 등록되도록 설정합니다.
+            @EnableAutoConfiguration: 자동 구성 기능을 활성화하는 데 사용됩니다.
+            @SpringBootApplication: 여러 스프링 부트 어노테이션을 결합하여 단일 어노테이션으로 제공하는 상위 어노테이션입니다.
+
+    2) 메서드 앞에 쓰는 어노테이션:
+        특정 메서드의 동작이나 특성을 정의합니다. 예를 들어, @Bean은 스프링 컨테이너가 관리할 빈을 정의하는 메서드에 사용되고, @Transactional은 메서드가 트랜잭션 내에서 실행되도록 지정
+        예시: @Bean, @RequestMapping, @PostConstruct, @PreDestroy, @Transactional 등.
+            @Bean: 스프링 컨테이너에 의해 관리되는 객체를 정의하는 메서드에 사용됩니다.
+            @RequestMapping: 특정 URL 요청을 특정 메서드에 매핑하는 데 사용됩니다. (하위 mapping류 더 있음)
+            @PostConstruct: 빈 초기화가 완료된 후 실행할 메서드를 표시합니다.
+            @PreDestroy: 빈이 소멸되기 전에 실행할 메서드를 표시합니다.
+            @Transactional: 메서드가 트랜잭션 내에서 실행되도록 지정합니다.
+            @Scheduled: 일정한 주기로 메서드를 실행하도록 예약합니다.
+
+    3) 매개변수 앞에 사용하는 어노테이션
+            @RequestParam: HTTP 요청 파라미터를 메서드 파라미터에 바인딩하는 데 사용됩니다.
+            @PathVariable: URL 경로 변수 값을 메서드 파라미터에 바인딩하는 데 사용됩니다.
+            @RequestBody: HTTP 요청의 본문을 메서드 파라미터에 바인딩하는 데 사용됩니다.
+            @Valid: 파라미터 검증을 위해 사용되며, 자바 빈 검증 API와 함께 사용됩니다.
+
+    4) 필드 앞에 사용하는 어노테이션
+            @Autowired: 스프링 컨테이너가 적절한 빈을 자동으로 주입하도록 하는 데 사용
+            @Value: 속성 파일에서 값을 주입하는 데 사용됩니다.
+            @Inject: 주입을 통해 의존성을 해결하는 데 사용됩니다.
+            @Resource: 자원을 주입하는 데 사용됩니다.
+
+>> 기능으로 분류
+
+    (1) 구성 및 빈 정의 관련 어노테이션
+       @Component:
+             클래스를 스프링 빈으로 등록하는 기본 애너테이션입니다. @Component가 붙은 클래스는 스프링 컨테이너가 자동으로 관리하고, 빈으로 등록됩니다
+       @ComponentScan:
+              특정 패키지에서 빈을 자동으로 검색하여 등록할 때 사용합니다.
+              주로 @Configuration과 함께 사용되며, 지정된 패키지 내에서 @Component, @Service, @Repository, @Controller 등이 붙은 클래스들을 자동으로 스캔하고 등록합니다.
+
+       @Service, @Repository, @Controller:
+              @Service는 비즈니스 로직을 처리하는 클래스에 사용하고,
+              @Repository는 데이터베이스 접근을 담당하는 클래스에 사용합니다.
+              @Controller는 웹 요청을 처리하는 컨트롤러 클래스에 사용됩니다.
+        @RestController
+              @Controller와 @ResponseBody를 결합한 형태로, RESTful 웹 서비스를 위한 컨트롤러를 정의합니다. JSON/XML 형태의 데이터를 반환합니다.
+
+       @Configuration:
+              스프링에서 설정 클래스를 정의할 때 사용하는 애너테이션입니다.
+              @Configuration이 붙은 클래스는 스프링의 설정 정보를 담고 있는 클래스입니다.
+              @Bean과 함께 사용하여 명시적으로 빈을 등록할 수 있습니다.
+
+       @Bean:
+              @Bean 애너테이션은 "메서드"에 붙여서 빈을 등록하는 데 사용됩니다.
+              @Configuration이 붙은 클래스에서 @Bean을 사용하면 해당 메서드의 반환값이 스프링 빈으로 등록됩니다.
+
+
+    (2) 의존성 주입 관련 어노테이션
+       @Autowired;   해당 필드, 생성자 또는 메서드에 스프링 컨테이너가 적절한 빈을 자동으로 주입하도록 하는 데 사용
+       @Qualifier;   특정 Bean을 (이름을 명시적으로 지정하여) 주입합니다.
+
+
+    (3) AOP (Aspect-Oriented Programming) 관련 애너테이션
+       @Aspect:
+          AOP 기능을 구현할 때 사용되는 애너테이션으로, 관심사를 분리하고 공통 기능을 모듈화하는 데 사용됩니다.
+
+       @Before, @After, @Around 등:
+          AOP의 Before, After, Around 등의 Advice를 설정하는 데 사용됩니다. 이 애너테이션들은 메서드의 실행 전, 후, 또는 둘 다를 관찰하여 특정 처리를 수행합니다.
+
+    (4)웹 관련 어노테이션
+
+        4-1) 맵핑
+            @RequestMapping;    HTTP 요청을 특정 메서드와 매핑합니다. GET, POST, PUT, DELETE 등 모든 HTTP 메서드에 사용할 수 있습니다.
+                @GetMapping;    HTTP GET 요청을 특정 메서드와 매핑. @RequestMapping의 특수한 형태로, GET 요청에만 사용
+                @PostMapping;   HTTP POST 요청을 특정 메서드와 매핑합니다. @RequestMapping의 특수한 형태로, POST 요청에만 사용
+                @PutMapping;    HTTP PUT 요청을 특정 메서드와 매핑
+                @DeleteMapping; HTTP DELETE 요청을 특정 메서드와 매핑
+
+        4-2) HTTP 요청 및 응답을 처리할 때 사용
+            @RequestParam;  URL 쿼리 스트링 또는 폼 데이터의 파라미터 값을 메서드의 파라미터로 매핑
+            @PathVariable; URL 경로의 일부를 변수로 만들어서, 메서드의 매개변수로 매핑
+            @RequestBody; HTTP 요청 본문을 Java 객체로 변환하여 메서드 매개변수에 바인딩, 요청 본문(JSON, XML 등)을 Java 객체로 변환
+
+            @ResponseBody; 메서드의 반환 값을 HTTP 응답 본문으로 전송 == 뷰로 랜더링하지 않고, 반환되는 문자열 그 자체로 응답하겠다.
+
+-->
