@@ -68,7 +68,7 @@ public class HomeController {
     public ModelAndView mult(
             ModelAndView mv,
             // ModelAndView ; 랜더링할 뷰를 지정하고 거기에 객채를 전달해주는 역할. ModelAndView 객체는 모델 데이터와 뷰 정보를 함께 포함하는 객체.
-            HttpServletRequest req,
+            HttpServletRequest req, // 서블릿의 필요한 객체들이 있으면, 매개변수에서 적어넣으면 됨.
             HttpServletResponse resp) throws IOException {
 
         // 원하면 톰캣 코드처럼 쓸 수 있음을 보여주기 위해 작업하는 것
@@ -123,7 +123,6 @@ public class HomeController {
         return "{\"name\":\"Joe\",\"age\":18}";
     }
 
-
     @GetMapping("/userMap.json")
     @ResponseBody // Map이나 DTO를 반환하면, 자동으로 json으로
     public Map<String, Object> userMap() throws IOException {
@@ -159,6 +158,9 @@ public class HomeController {
     @PostMapping("/signup.do")
     public String signup(
             @ModelAttribute UserDto userDto) { // @ModelAttribute을 써도 되고 안써도 됨
+        // 톰캣이었으면, form_post로 넘어온 매개변수를 모두 필드와 하고, 다시 set으로 설정해서 dto에 넣었어야 했는데.
+        // form의 name을 dto의 필드명과 맞춰서 해주면, 알아서 dto생성까지 자동화 됨.
+
 
         // html에서 input에 name만 dto 필드와 맞춰주면, 알아서 set~~메서드로 dto 객체의 필드값을 설정해줌
         // @ModelAttribute; 요청 파라미터를 바탕으로 모델 객체를 바인딩하고, 이를 컨트롤러 메서드의 매개변수로 사용
