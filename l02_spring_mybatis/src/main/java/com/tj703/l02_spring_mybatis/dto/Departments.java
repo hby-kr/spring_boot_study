@@ -1,10 +1,9 @@
 package com.tj703.l02_spring_mybatis.dto;
 
 import lombok.Data;
-import lombok.Getter;
 
 @Data
-public class DepartmentDto {
+public class Departments {
     //dept_no
     //dept_name
 

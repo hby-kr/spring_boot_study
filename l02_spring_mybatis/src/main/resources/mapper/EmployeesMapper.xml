@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--
+등장요소는
+    - DB 테이블
+    - DB 테이블에 해당하는 DTO
+    - DAO 인터페이스 = mapper
+    - MyBatis 매퍼 XML
+
+
+MyBatis 매퍼 XML의 기본 구조
+1. DAO (Mapper) 파일 연결
+    Mapper 인터페이스 파일을 작성하고, MyBatis 매퍼 XML 파일과 연결합니다.
+    인터페이스 메서드는 매퍼 XML 파일에서 정의된 SQL 문과 연결됩니다.
+
+2. ResultMap 설정
+    resultMap을 사용하여 데이터베이스 테이블 열과 DTO 필드를 매핑합니다.
+    column 속성은 데이터베이스 열을, property 속성은 DTO 필드를 나타냅니다.
+
+3. SQL 문법 사용
+    select, insert, update, delete 등의 요소를 사용하여 SQL 쿼리를 정의합니다.
+    id 속성은 매퍼의 메서드 이름을 나타내며, resultMap 속성은 결과를 매핑할 객체 구조를 명시합니다.
+-->
+
+
+<mapper namespace="com.tj703.l02_spring_mybatis.mapper.EmployeesMapper">
+
+    <resultMap id="empMap" type="com.tj703.l02_spring_mybatis.dto.Employees">
+        <id column="emp_no" property="empNo"/>
+        <result column="birth_date" property="birthDate"/>
+        <result column="first_name" property="firstName"/>
+        <result column="last_name" property="lastName"/>
+        <result column="gender" property="gender"/>
+        <result column="hire_date" property="hireDate"/>
+        <!--  <collection> 기능
+              일대다(One-to-Many) 관계를 처리할 때 자주 사용   -->
+        <collection property="deptEmps" ofType="com.tj703.l02_spring_mybatis.dto.DeptEmp">
+            <result column="dept_no" property="deptNo"/>
+            <result column="from_date" property="fromDate"/>
+            <result column="to_date" property="toDate"/>
+            <!--  <association> 기능은 객체 간의 일대일(One-to-One) 관계를 매핑할 때 사용   -->
+            <association property="dept">
+                <result column="dept_name" property="deptName"/>
+            </association>
+        </collection>
+    </resultMap>
+
+
+    <!-- fetch는 주로 연관된 데이터를 가져오는 방식을 결정할 때 사용
+       fetch는 데이터베이스 쿼리에서 결과 집합을 가져오는 작업을 의미
+       fetchType 옵션
+            lazy: 지연 로딩을 의미하며, 데이터가 실제로 필요할 때 데이터베이스에서 가져옵니다.
+            eager: 즉시 로딩을 의미하며, 객체를 로드할 때 관련 데이터도 즉시 로딩합니다.
+            즉시 로딩(Eager Loading) 즉시 로딩은 객체를 로드할 때 연관된 데이터도 함께 로딩하는 방식입니다.
+       -->
+    <resultMap id="empFetchMap" type="com.tj703.l02_spring_mybatis.dto.Employees">
+        <id column="emp_no" property="empNo"/>
+        <result column="birth_date" property="birthDate"/>
+        <result column="first_name" property="firstName"/>
+        <result column="last_name" property="lastName"/>
+        <result column="gender" property="gender"/>
+        <result column="hire_date" property="hireDate"/>
+        <association column="emp_no" property="empSalaries" fetchType="lazy"
+                     select="com.tj703.l02_spring_mybatis.mapper.SalariesMapper.findById"/>
+        <collection column="emp_no" property="deptEmps" select="findDeptEmpById" fetchType="lazy"/>
+        <!--
+        column은 이 매핑이 참조하는 부모 sql 테이블의 컬럼
+        deptEmps 속성은 부모 객체의 컬렉션 속성
+        select 속성은 자식 객체를 가져오기 위한 SQL 쿼리를 정의한 매퍼 메서드
+        fetchType 속성은 로딩 방식을 정의
+        -->
+    </resultMap>
+
+    <resultMap id="deptEmpMap" type="com.tj703.l02_spring_mybatis.dto.DeptEmp">
+        <result column="emp_no" property="empNo"/>
+        <result column="dept_no" property="deptNo"/>
+        <result column="from_date" property="fromDate"/>
+        <result column="to_date" property="toDate"/>
+        <association column="dept_no" property="dept" fetchType="eager"
+                     select="com.tj703.l02_spring_mybatis.mapper.DepartmentMapper.findById"/>
+    </resultMap>
+
+
+    <insert id="insert">
+        INSERT into employees (emp_no, birth_date, first_name, last_name, gender, hire_date)
+        values (#{empNo}, #{birthDate}, #{firstName}, #{lastName}, #{gender}, #{hireDate})
+    </insert>
+    <update id="update">
+        Update employees
+        SET birth_date= #{birthDate},
+            first_name = #{firstName},
+            last_name = #{lastName},
+            gender= #{gender},
+            hire_date = #{hireDate}
+        WHERE emp_no = #{empNo}
+    </update>
+    <delete id="delete">
+        DELETE
+        from employees
+        where emp_no = #{empNo}
+    </delete>
+    <select id="findAll" resultMap="empMap">
+        Select *
+        from employees.employees
+        limit 20
+    </select>
+    <select id="findWithDeptById" resultMap="empMap">
+        select e.*, de.*, d.*
+        from employees.employees as e
+                 LEFT JOIN dept_emp as de on e.emp_no = de.emp_no
+                 LEFT JOIN departments as d on de.dept_no = d.dept_no
+        where e.emp_no = #{no}
+    </select>
+    <select id="findById" resultMap="empFetchMap">
+        SELECT *
+        FROM employees.employees
+        WHERE emp_no = #{no}
+    </select>
+    <select id="findDeptEmpById" resultMap="deptEmpMap">
+        SELECT *
+        FROM dept_emp
+        WHERE emp_no = #{no}
+    </select>
+
+
+</mapper>

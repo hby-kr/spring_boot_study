@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>부서 상세정보</title>
+</head>
+<body>
+
+<h1>부서 상세정보</h1>
+
+<div>
+    <p>
+        사번 : <strong th:text="${emp.empNo}"> </strong>
+    </p>
+    <p>
+        이름 : <strong th:text="${emp.lastName} + ${emp.firstName}"> </strong>
+    </p>
+    <p>
+        생일 : <strong th:text="${emp.birthDate}"> </strong>
+    </p>
+    <p> 성별 :
+        <th:block th:if="${emp.gender == emp.gender.M}"> 남성</th:block>
+        <th:block th:unless="${emp.gender == emp.gender.M}"> 여성</th:block>
+    </p>
+    <p>
+        <!--  fetch lazy의 트리거가 된다.
+              부서정보 : <strong th:text="${emp.deptEmps}"> </strong> -->
+    </p>
+
+    <h2> 부서 이동 이력</h2>
+    <p>
+    <table>
+        <thead>
+        <tr>
+            <th>부서번호</th>
+            <th>부서이름</th>
+            <th>from date</th>
+            <th>to date</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="de : ${emp.deptEmps}">
+            <td th:text="${de.deptNo}"></td>
+<!--            <td th:text="${de.dept.deptName}"></td>-->
+            <td th:text="${de.fromDate}"></td>
+            <td th:text="${de.toDate}"></td>
+        </tr>
+        </tbody>
+    </table>
+    </p>
+
+    <h2> 급여 수령 이력</h2>
+    <p>
+    <table>
+        <thead>
+        <tr>
+            <th>급여 액수</th>
+            <th>근무 시작 일자</th>
+            <th>근무 종료 일자</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each =" sal : ${emp.empSalaries}" >
+            <td th:text ="${sal.salary}"></td>
+            <td th:text ="${sal.fromDate}"></td>
+            <td th:text ="${sal.toDate}"></td>
+        </tr>
+        </tbody>
+    </table>
+    </p>
+
+
+    <p>
+        <a th:href="@{/emp/modify.do(empNo=${emp.empNo})}">수정하기</a>
+    </p>
+</div>
+
+
+</body>
+</html>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tj703.l02_spring_mybatis.mapper.SalariesMapper">
+
+    <resultMap id="salariesMap" type="com.tj703.l02_spring_mybatis.dto.Salaries">
+        <result column="emp_no" property="empNo"/>
+        <result column="salary" property="salary"/>
+        <result column="from_date" property="fromDate"/>
+        <result column="to_date" property="toDate"/>
+    </resultMap>
+
+    <select id="findById" resultMap="salariesMap" >
+        SELECT * FROM salaries WHERE emp_no = #{no}
+    </select>
+
+</mapper>

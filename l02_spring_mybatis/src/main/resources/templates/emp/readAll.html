@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>사원 리스트</title>
+</head>
+<body>
+
+<h1>사원 리스트</h1>
+
+<h3> 그냥 불러오기 </h3>
+<p th:text=${emps}></p>
+<hr>
+
+
+<h3> 테이블 만들어서 타임리프 문법 사용해서 불러오기 </h3>
+
+<table>
+    <thead>
+    <tr>
+        <th>사번</th>
+        <th>이름</th>
+        <th>생일</th>
+        <th>성별</th>
+        <th>상세</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    <tr th:each="emp : ${emps}"> <!-- 타임리프는 형변환이 자동으로 됨   -->
+        <td th:text="${emp.getEmpNo()}"></td>
+        <td th:text="${emp.lastName} + ${emp.firstName}"></td> <!-- 타임리프는 getter메서드를 호출할 때, 필드명으로 가져올 수 있음 -->
+        <td th:text=" ${#temporals.format(emp.birthDate, 'yy년 MM월 dd일')}" ></td>
+        <!--
+         #dates와 #temporals 모두 Thymeleaf에서 날짜와 시간과 관련된 작업을 처리하기 위한 유틸리티 객체
+            #dates는 주로 java.util.Date와 같은 구식 날짜 클래스를 처리하는 데 사용
+                <td th:text="${#dates.format(emp.birthDate, 'yyyy-MM-dd')}"></td>
+
+            #temporals는 Thymeleaf 3.0에서 도입된 유틸리티 객체로,
+            java.time.LocalDate, java.time.LocalDateTime, java.time.ZonedDateTime 등
+            Java 8 이상에서 도입된 새로운 날짜 및 시간 클래스를 처리하는 데 사용
+                <td th:text="${#temporals.format(emp.birthDate, 'yyyy-MM-dd')}"></td>
+        -->
+        <td>
+            <th:block th:if="${emp.gender == emp.gender.M}"> 남성</th:block>
+            <th:block th:unless="${emp.gender == emp.gender.M}"> 여성</th:block>
+        </td>
+        <td><a th:href="@{/emp/read.do(empNo=${emp.empNo})} ">상세</a></td>
+        <!-- http://localhost:8181/emp/read.do?empNo=3      -->
+    </tr>
+    </tbody>
+</table>
+
+</body>
+</html>
+
+<!-- 타임리프 기본 문법
+Thymeleaf에서 변수를 표현하려면 ${} 구문을 사용
+
+th:with는 Thymeleaf 템플릿에서 변수를 임시로 선언하고 사용할 수 있게 해주는 속성
+<div th:with="totalPrice=${item.price * item.quantity}">
+    <p>Item: <span th:text="${item.name}">Item Name</span></p>
+    <p>Price: <span th:text="${item.price}">0.00</span></p>
+    <p>Quantity: <span th:text="${item.quantity}">0</span></p>
+    <p>Total Price: <span th:text="${totalPrice}">0.00</span></p>
+</div>
+
+
+ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
+
+th:block는 Thymeleaf에서 사용되는 특별한 태그로,
+HTML 문서 내에서 일종의 논리적 블록을 형성하기 위해 사용됩니다.
+이는 렌더링 결과에 직접적인 영향을 미치지 않으며, 특정 컨텍스트에서만 조건부로 코드를 작성하거나 변수를 정의할 수 있게 도와줍니다.
+주요 용도
+1. 조건부 렌더링
+2. 임시 변수 선언
+3. 복잡한 표현식 처리
+
+ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
+
+Thymeleaf에서 [[...]] 표현은 인라인 텍스트 모드(inline text mode)로 불리며,
+ 주로 JavaScript, CSS 또는 일반 텍스트 내에서 변수 값을 삽입할 때 사용
+ 1. 인라인 JavaScript
+ <script th:inline="javascript">
+    var username = [[${user.name}]];
+    alert("Welcome, " + username + "!");
+</script>
+위 예시에서는 user.name 변수의 값을 JavaScript 변수 username에 할당하고, 이를 알림 메시지로 표시합니다.
+
+2. 인라인 CSS
+CSS 코드 내에서 서버 사이드 변수를 사용할 수 있습니다.
+<style th:inline="css">
+    .user-profile {
+        color: [[${user.favoriteColor}]];
+    }
+</style>
+위 예시에서는 user.favoriteColor 변수의 값을 CSS 스타일 color 속성에 할당합니다.
+
+3.일반 텍스트
+<p th:inline="text">Hello, [[${user.name}]]! Welcome to our website.</p>
+위 예시에서는 user.name 변수의 값을 텍스트에 직접 삽입하여 출력합니다.
+
+
+ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
+
+조건부 렌더링
+th:if와 th:unless를 사용하여 조건부로 요소를 렌더링
+
+ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
+
+반복 처리
+th:each를 사용하여 컬렉션을 반복 처리
+
+ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
+
+링크 처리
+Thymeleaf에서 링크를 생성할 때는 th:href를 사용
+    절대 URL
+    <a th:href="@{/home}">Home</a>
+    절대 URL과 매개변수
+    <a th:href="@{/user/profile(id=${user.id})}">Profile</a>
+    상대 URL
+    <a th:href="@{~/resources/css/styles.css}">Styles</a>
+
+ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
+
+폼 처리
+Thymeleaf를 사용하여 폼 데이터를 처리
+
+-->

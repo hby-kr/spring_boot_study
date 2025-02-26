@@ -1,17 +1,16 @@
 package com.tj703.l02_spring_mybatis.mapper;
 
-import com.tj703.l02_spring_mybatis.dto.DepartmentDto;
+import com.tj703.l02_spring_mybatis.dto.Departments;
 import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Result;
-import org.apache.ibatis.annotations.Results;
-import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
 
 @Mapper // mybatis container에서 관리되는 객체 (mybatis = session factory)
 public interface DepartmentMapper { // Mapper == Dao (Db access Object)
 
-    List<DepartmentDto> findAll();
+    List<Departments> findAll();
+
+    Departments findById(String deptNo);
 
 
 }
