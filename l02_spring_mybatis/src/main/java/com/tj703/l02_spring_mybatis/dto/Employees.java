@@ -2,6 +2,7 @@ package com.tj703.l02_spring_mybatis.dto;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import lombok.Data;
 
@@ -22,5 +23,8 @@ public class Employees {
     private List<DeptEmp> deptEmps; // 1:n fk emp_no
 
     private List<Salaries> empSalaries; // 1:n fk emp_no
+    private Long totalSalary;
+
+    private Titles title;
 
 }

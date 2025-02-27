@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>부서 상세정보</title>
-</head>
+<html lang="ko">
+
+<head th:replace = "fragments/headLink :: head"></head>
+<!--    :: head 란 fragments/headLink.html 문서에서 head태그만 불러오겠다.  -->
 <body>
+<header th:replace = "fragments/headerNav :: navbar"></header>
 
 <h1>부서 상세정보</h1>
 
@@ -13,7 +13,10 @@
         사번 : <strong th:text="${emp.empNo}"> </strong>
     </p>
     <p>
-        이름 : <strong th:text="${emp.lastName} + ${emp.firstName}"> </strong>
+        이름 : <strong th:text="${emp.lastName} +' '+ ${emp.firstName}"> </strong>
+    </p>
+    <p style="color: blue">
+        현재 직책 : <strong th:text="${emp.title?.title}"> </strong>
     </p>
     <p>
         생일 : <strong th:text="${emp.birthDate}"> </strong>
@@ -22,6 +25,9 @@
         <th:block th:if="${emp.gender == emp.gender.M}"> 남성</th:block>
         <th:block th:unless="${emp.gender == emp.gender.M}"> 여성</th:block>
     </p>
+    <p style="color: darkgreen">
+        총급여 : <strong th:text="${emp.totalSalary}"> </strong>
+    </p>
     <p>
         <!--  fetch lazy의 트리거가 된다.
               부서정보 : <strong th:text="${emp.deptEmps}"> </strong> -->
@@ -29,7 +35,7 @@
 
     <h2> 부서 이동 이력</h2>
     <p>
-    <table>
+    <table class="table">
         <thead>
         <tr>
             <th>부서번호</th>
@@ -41,7 +47,7 @@
         <tbody>
         <tr th:each="de : ${emp.deptEmps}">
             <td th:text="${de.deptNo}"></td>
-<!--            <td th:text="${de.dept.deptName}"></td>-->
+            <td th:text="${de.dept.deptName}"></td>
             <td th:text="${de.fromDate}"></td>
             <td th:text="${de.toDate}"></td>
         </tr>
@@ -51,7 +57,7 @@
 
     <h2> 급여 수령 이력</h2>
     <p>
-    <table>
+    <table class="table">
         <thead>
         <tr>
             <th>급여 액수</th>

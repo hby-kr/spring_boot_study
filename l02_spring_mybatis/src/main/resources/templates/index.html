@@ -5,12 +5,12 @@ Spring Boot는 /src/main/resources/templates 디렉토리에 있는 모든 HTML 
 이는 별도의 설정 없이도 Thymeleaf 템플릿을 인식할 수 있게 해 줍니다.
 -->
 
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Spring data mybatis</title>
-</head>
+<html lang="ko">
+<head th:replace = "fragments/headLink :: head"></head>
+<!--    :: head 란 fragments/headLink.html 문서에서 head태그만 불러오겠다.  -->
+
 <body>
+<header th:replace = "fragments/headerNav :: navbar"></header>
 
 <h1>Spring data mybatis(=session Factory)</h1>
 

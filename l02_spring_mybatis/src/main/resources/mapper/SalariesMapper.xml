@@ -13,4 +13,8 @@
         SELECT * FROM salaries WHERE emp_no = #{no}
     </select>
 
+    <select id="findSumSalaryById" resultType="java.lang.Long">
+        SELECT SUM(employees.salaries.salary) FROM salaries WHERE emp_no = #{no}
+    </select>
+
 </mapper>

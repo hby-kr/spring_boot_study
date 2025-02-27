@@ -8,7 +8,6 @@
     - DAO 인터페이스 = mapper
     - MyBatis 매퍼 XML
 
-
 MyBatis 매퍼 XML의 기본 구조
 1. DAO (Mapper) 파일 연결
     Mapper 인터페이스 파일을 작성하고, MyBatis 매퍼 XML 파일과 연결합니다.
@@ -22,7 +21,6 @@ MyBatis 매퍼 XML의 기본 구조
     select, insert, update, delete 등의 요소를 사용하여 SQL 쿼리를 정의합니다.
     id 속성은 매퍼의 메서드 이름을 나타내며, resultMap 속성은 결과를 매핑할 객체 구조를 명시합니다.
 -->
-
 
 <mapper namespace="com.tj703.l02_spring_mybatis.mapper.EmployeesMapper">
 
@@ -47,13 +45,17 @@ MyBatis 매퍼 XML의 기본 구조
     </resultMap>
 
 
-    <!-- fetch는 주로 연관된 데이터를 가져오는 방식을 결정할 때 사용
-       fetch는 데이터베이스 쿼리에서 결과 집합을 가져오는 작업을 의미
-       fetchType 옵션
-            lazy: 지연 로딩을 의미하며, 데이터가 실제로 필요할 때 데이터베이스에서 가져옵니다.
-            eager: 즉시 로딩을 의미하며, 객체를 로드할 때 관련 데이터도 즉시 로딩합니다.
-            즉시 로딩(Eager Loading) 즉시 로딩은 객체를 로드할 때 연관된 데이터도 함께 로딩하는 방식입니다.
-       -->
+    <resultMap id="deptEmpMap" type="com.tj703.l02_spring_mybatis.dto.DeptEmp">
+        <result column="emp_no" property="empNo"/>
+        <result column="dept_no" property="deptNo"/>
+        <result column="from_date" property="fromDate"/>
+        <result column="to_date" property="toDate"/>
+        <association column="dept_no" property="dept" fetchType="eager"
+                     select="com.tj703.l02_spring_mybatis.mapper.DepartmentMapper.findById"/>
+    </resultMap>
+
+
+    <!-- fetch는 데이터베이스 쿼리에서 결과 집합을 가져오는 작업을 의미  -->
     <resultMap id="empFetchMap" type="com.tj703.l02_spring_mybatis.dto.Employees">
         <id column="emp_no" property="empNo"/>
         <result column="birth_date" property="birthDate"/>
@@ -63,23 +65,26 @@ MyBatis 매퍼 XML의 기본 구조
         <result column="hire_date" property="hireDate"/>
         <association column="emp_no" property="empSalaries" fetchType="lazy"
                      select="com.tj703.l02_spring_mybatis.mapper.SalariesMapper.findById"/>
+        <association column="emp_no" property="title" fetchType="lazy"
+                     select="com.tj703.l02_spring_mybatis.mapper.TitlesMapper.findById"/>
+        <association column="emp_no" property="totalSalary" fetchType="lazy"
+                     select="com.tj703.l02_spring_mybatis.mapper.SalariesMapper.findSumSalaryById"/>
         <collection column="emp_no" property="deptEmps" select="findDeptEmpById" fetchType="lazy"/>
         <!--
         column은 이 매핑이 참조하는 부모 sql 테이블의 컬럼
         deptEmps 속성은 부모 객체의 컬렉션 속성
         select 속성은 자식 객체를 가져오기 위한 SQL 쿼리를 정의한 매퍼 메서드
         fetchType 속성은 로딩 방식을 정의
+          fetchType 옵션은 둘
+            - lazy: 지연 로딩을 의미하며, 데이터가 실제로 필요할 때 데이터베이스에서 가져옵니다.
+            - eager: 즉시 로딩을 의미하며, 객체를 로드할 때 관련 데이터도 즉시 로딩합니다.
         -->
     </resultMap>
+    <!--  inner 조인으로 불러오는 것과 fetch를 쓰는 것 중
+    속도는 sql에서 조인하는 것이 더 빠르다. 편한건 fetch가 더 편하고.
 
-    <resultMap id="deptEmpMap" type="com.tj703.l02_spring_mybatis.dto.DeptEmp">
-        <result column="emp_no" property="empNo"/>
-        <result column="dept_no" property="deptNo"/>
-        <result column="from_date" property="fromDate"/>
-        <result column="to_date" property="toDate"/>
-        <association column="dept_no" property="dept" fetchType="eager"
-                     select="com.tj703.l02_spring_mybatis.mapper.DepartmentMapper.findById"/>
-    </resultMap>
+    + fetch 대상이 되려면, 꼭 resultMap을 정의해야한다.
+   -->
 
 
     <insert id="insert">
@@ -122,6 +127,5 @@ MyBatis 매퍼 XML의 기본 구조
         FROM dept_emp
         WHERE emp_no = #{no}
     </select>
-
 
 </mapper>

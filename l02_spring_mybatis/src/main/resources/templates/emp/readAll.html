@@ -1,21 +1,20 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>사원 리스트</title>
-</head>
+<html lang="ko">
+<head th:replace = "fragments/headLink :: head"></head>
+<!--    :: head 란 fragments/headLink.html 문서에서 head태그만 불러오겠다.  -->
 <body>
+<header th:replace = "fragments/headerNav :: navbar"></header>
 
 <h1>사원 리스트</h1>
 
 <h3> 그냥 불러오기 </h3>
-<p th:text=${emps}></p>
+<p th:text="${emps}"></p>
 <hr>
 
 
 <h3> 테이블 만들어서 타임리프 문법 사용해서 불러오기 </h3>
 
-<table>
+<table class="table">
     <thead>
     <tr>
         <th>사번</th>
