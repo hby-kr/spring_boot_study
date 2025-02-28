@@ -1,0 +1,19 @@
+spring:
+  application:
+    name: l05_spring_jpa_emp
+
+  datasource:
+    username: ${mysql.user}
+    password: ${mysql.pw}
+    url: jdbc:mysql://localhost:3306/employees
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+server:
+  port: 8181
+
