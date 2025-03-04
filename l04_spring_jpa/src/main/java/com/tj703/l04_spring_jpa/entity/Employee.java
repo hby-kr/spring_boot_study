@@ -2,12 +2,18 @@ package com.tj703.l04_spring_jpa.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.*;
 
-@Data
+
+@ToString
+@Getter
+@Setter
 @Entity
 @Table(name = "employees") // employee라고 지었으니까 연결시켜주는 것
 public class Employee implements Serializable {
@@ -40,8 +46,8 @@ public class Employee implements Serializable {
     // CascadeType.REFRESH: 엔터티를 새로 고침할 때 연관된 엔터티도 함께 새로 고침합니다.
     // CascadeType.DETACH: 엔터티를 영속성 컨텍스트에서 분리할 때 연관된 엔터티도 함께 분리합니다.
     @OneToMany(mappedBy = "employee", fetch = FetchType.LAZY, cascade = CascadeType.ALL) // == Salary.employee
-    @OrderBy (value = "salary desc") // 인덱스가 없는 Set으로 자료를 받아도 순서 정렬해주기.
-    private List<Salary> salaries=new ArrayList<>();// = new LinkedHashSet<>();
+    @OrderBy(value = "salary desc") // 인덱스가 없는 Set으로 자료를 받아도 순서 정렬해주기.
+    private Set<Salary> salaries = new LinkedHashSet<>();
     // LinkedHashSet (순서를 보장하는 Set. List처럼 사용가능) (cf. HashSet은 인덱스없고 중복제거)
     // 기준잡기.
     // 조인을 많이 안하면, List타입으로 해도 됨.
@@ -49,14 +55,13 @@ public class Employee implements Serializable {
 
     // 조인 해보기
     @OneToMany(mappedBy = "employee", fetch = FetchType.LAZY, cascade = CascadeType.ALL) // == Salary.employee
-    private List<Title> Titles=new ArrayList<>();// = new LinkedHashSet<>() ;
+    private Set<Title> Titles = new LinkedHashSet<>();
     // 조인 관계를 적기.  title에서 @ManyToOne, @OneToOne을 구현하고 있어야 한다. 관계를 지어주는 것
 
     // 조인 해보기
     @OneToMany(mappedBy = "employee", fetch = FetchType.LAZY, cascade = CascadeType.ALL) // == Salary.employee
-    private List<DeptEmp> deptEmps=new ArrayList<>();//= new LinkedHashSet<>() ;
+    private Set<DeptEmp> deptEmps = new LinkedHashSet<>();
     // 조인 관계를 적기.  title에서 @ManyToOne, @OneToOne을 구현하고 있어야 한다. 관계를 지어주는 것
-
 
 
 }

@@ -20,6 +20,8 @@ public class Homecontroller {
     // @Autowired는 컴포넌트(component) 하위에만 된다(Controller가 component이므로). 즉 컨테이너 안에서 두 객체가 주고받는 것임.
     private DataSource dataSource;
     // 타입을 DataSource보다 좀더 부모 클래스를 썼을 때, 주입할 객체를 잘못 줄 수 있는 가능성이 있음
+    // DataSource는 데이터베이스 연결 풀을 관리하는 객체로, 데이터베이스와의 연결을 관리하고 재사용할 수 있게 해줌.
+    
 
     @GetMapping("/")
     public String home(Model model) throws Exception {

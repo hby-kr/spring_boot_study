@@ -5,10 +5,16 @@ import jakarta.persistence.Embeddable;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 import java.io.Serializable;
 
-@Data
+
+@ToString
+@Getter
+@Setter
 @Embeddable
 public class DeptEmpId implements Serializable {
 

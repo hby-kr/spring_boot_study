@@ -33,12 +33,12 @@ class EmployServiceTest {
         emp.setHireDate(LocalDate.parse("2020-01-01"));
         emp.setId(10001);
 
-//        Salary salary = new Salary();
-//        salary.setSalary(9);
-//        salary.setEmpNo(10001);
-//        salary.setFromDate(LocalDate.parse("2020-01-01"));
-//        salary.setToDate(LocalDate.parse("2020-01-30"));
-//        emp.getSalaries().add(salary);
+        Salary salary = new Salary();
+        salary.setSalary(9);
+        salary.setEmpNo(10001);
+        salary.setFromDate(LocalDate.parse("2020-01-01"));
+        salary.setToDate(LocalDate.parse("2020-01-30"));
+        emp.getSalaries().add(salary);
 
         Title title = new Title();
         title.setTitle("모르겠음");

@@ -13,11 +13,10 @@ import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 
-@Controller
-// @Component의 자식으로 Servelt 클래스
+@Controller // @Component의 자식으로 Servelt 클래스
 public class HomeController {
 
-    @GetMapping("/") // http://localhost:8181/라고 get 방식 요청오면
+    @GetMapping("/") // http://localhost:8181/라고 get 방식 요청오면.
     // 물론 이것은 디폴트 값임. 그냥 설정해본것
     public String home() {
         return "index"; // 이것을 반환하라.
@@ -30,30 +29,38 @@ public class HomeController {
     //          prefix       + index + suffix 를 알아서 붙여준다.
     // classpath:/templates/ + index + .html
     /*
-    classpath:/static/ — src/main/resources/static/ 경로의 리소스를 참조합니다.
-    classpath:/templates/ — src/main/resources/templates/ 경로의 템플릿 파일을 참조합니다.
-    /WEB-INF/views/ — src/main/webapp/WEB-INF/views/ 폴더에 위치한 JSP 파일을 참조합니다.
+    classpath:/templates/는 실제 파일 시스템에서 src/main/resources/templates/ 경로를 가리키는 것입니다.
     스프링은 classpath: 접두어를 사용하여 src/main/resources 디렉토리 내의 리소스를 참조합니다.
-    예를 들어, classpath:/templates/는 실제 파일 시스템에서 src/main/resources/templates/ 경로를 가리키는 것입니다.
+
+    classpath:/static/      == src/main/resources/static/ 경로의 리소스를 참조합니다.
+    classpath:/templates/   == src/main/resources/templates/ 경로의 템플릿 파일을 참조합니다.
+    /WEB-INF/views/         == src/main/webapp/WEB-INF/views/ 폴더에 위치한 JSP 파일을 참조합니다.
      */
 
 
+
     // 한 서블릿 안에 주소를 여러개 설정할 수 있다는 것도 특징임
-    // 톰킷에서는 서블릿 매핑 1:1로 각 java파일을 만들었다면,
+    // 톰킷에서는 서블릿 매핑 1:1로 각 java파일을 만드는 것에 비해.
     // 하나의 맵핑이 하나의 메서드가 되어서 실행되게 함 -> 따라서 여러 메서드(여러 매핑)을 한번에 적을 수 있음
     @GetMapping("/sum.do")
-    public String sum(@RequestParam(defaultValue = "0") int a,
-                      @RequestParam(defaultValue = "0") int b,
-                      // @RequestParam(defaultValue = "0")는 기본값 세팅하는 것. RequestParam을 쓰면 자동으로 required=true가 설정되고, 없으면 400에러. 파라미터가 없으면 페이지가 동작하지 않는다.
-                      Model model) {
+    public String sum(
+            @RequestParam(defaultValue = "0") int a,
+            @RequestParam(defaultValue = "0") int b,
+            // @RequestParam(defaultValue = "0")는 기본값 세팅하는 것.
+            // RequestParam을 쓰면 자동으로 required=true가 설정되고, 없으면 400에러. 파라미터가 없으면 페이지가 동작하지 않는다.
+            // 이처럼 매개변수를 이렇게 길게 넣게 된다.
+            Model model) {
+
         // Model ; Model 객체는 랜더링할 뷰가 지정되어 있을 때 사용하며, 컨트롤러에서 뷰로 데이터를 전달하는 데 사용
-        // 뷰에서 필요한 데이터를 설정할 수 있으며, 이를 통해 뷰 템플릿(예: JSP, Thymeleaf 등)에서 데이터를 렌더링할 수 있음  cf. ModelAndView
+        // Model은 키-값 쌍의 형태로 데이터를 저장하는 Map<String, Object>와 비슷한 방식으로 동작하는 인터페이스.
+        // 뷰에서 필요한 데이터를 설정할 수 있으며, Model을 통해 뷰 템플릿(예: JSP, Thymeleaf 등)에서 데이터를 렌더링할 수 있음  cf. ModelAndView
         model.addAttribute("sum", a + b);
-        // == request.setAttribute("sum", a+b)  // sum라는 속성으로 a + b의 값을 뷰 템플릿에 전달
-        return "sum"; // veiw인 sum.html으로 보내면서 model객체 "sum"을 함께 보냄.
-        // req.getRequestDispatcher("/WEB-INF/views/sum.do").forward(req, resp); 이와 같은 명령임
+        // ==  (jsp에서)  request.setAttribute("sum", a+b)  // sum라는 속성으로 a + b의 값을 뷰 템플릿에 전달
+
+        return "sum"; // view인 sum.html으로 보내면서 model객체에 "sum" (키-값)을 함께 보냄.
+        // ==  (jsp에서)  req.getRequestDispatcher("/WEB-INF/views/sum.do").forward(req, resp); 이와 같은 명령임
     }
-    /*  Model 메서드
+    /*  Model의  메서드
         addAttribute(String attributeName, Object attributeValue): 모델에 속성을 추가합니다.
         addAttribute(Object attributeValue): 모델에 익명 속성을 추가합니다.(주로 클래스를 모델 안에 넣고, 호출하 때는 객체.필드 방식으로 호출)
         mergeAttributes(Map<String, ?> attributes): 모델에 여러 속성을 추가합니다.
@@ -61,11 +68,12 @@ public class HomeController {
      */
 
 
-    // 컨트롤러 내부에서 작성된 함수 서블릿(mult.do)은 매개변수로, 스프링에서 관리하는 객체를 받아서 사용할 수 있다.
-    // 이때 객체는 톰캣에서 생성하는 객체 전부와 Spring.webd에서 제공하는 것들로 구성된다.
-    // request, response, session, cookie,... @RequestParam, SessionAttribute
+
     @GetMapping("/mult.do")
     public ModelAndView mult(
+            // 컨트롤러 내부에서 작성된 함수 서블릿(mult.do)은 매개변수로, 스프링에서 관리하는 객체를 받아서 사용할 수 있다.
+            // 이때 객체는 톰캣에서 생성하는 객체 전부와 Spring.web에서 제공하는 것들로 구성된다.
+            // request, response, session, cookie,... @RequestParam, SessionAttribute
             ModelAndView mv,
             // ModelAndView ; 랜더링할 뷰를 지정하고 거기에 객채를 전달해주는 역할. ModelAndView 객체는 모델 데이터와 뷰 정보를 함께 포함하는 객체.
             HttpServletRequest req, // 서블릿의 필요한 객체들이 있으면, 매개변수에서 적어넣으면 됨.
@@ -87,8 +95,13 @@ public class HomeController {
     }
     /*
     ModelAndView 메서드
+    뷰 이름과 단일 모델 속성을 사용하는 ModelAndView 객체를 생성합니다.
+    ModelAndView(String viewName, Map<String, ?> modelMap) 구조임
+    ModelAndView(String viewName, String modelName, Object modelObject):
+        (뷰 설정)
         setViewName(String viewName): 뷰 이름을 설정합니다.
         getViewName(): 설정된 뷰 이름을 반환합니다.
+        (모델 설정)
         addObject(String attributeName, Object attributeValue): 모델에 속성을 추가합니다.
         addObject(Object attributeValue):  모델에 익명 속성을 추가합니다.(주로 클래스를 모델 안에 넣고, 호출하 때는 객체.필드 방식으로 호출)
         getModel(): 모델 데이터를 반환합니다.
@@ -97,16 +110,17 @@ public class HomeController {
 
 
 
-    @GetMapping("/minus.do")
-    public void minus(@RequestParam(defaultValue = "0") int a,
-                      @RequestParam(defaultValue = "0") int b,
-                      Model model) {
-        // void면 자동으로 주소(minus.do)에서 minus만 빼서 앞에 prefix, 뒤에 suffix(.html)을 붙인다.
 
-        // a,b 변수를 받아올 때 아무 문제 없게 만드는 방법
-        // 1) 랩퍼클래스로 만든다.
-        // 2) @RequestParam를 사용한다.
-        // 3) int를 파싱한다.
+    @GetMapping("/minus.do")
+    // void면 자동으로 주소(minus.do)에서 minus만 빼서 앞에 prefix, 뒤에 suffix(.html)을 붙인다.
+    public void minus(
+            @RequestParam(defaultValue = "0") int a,
+            @RequestParam(defaultValue = "0") int b,
+            Model model) {
+            // a,b 변수를 받아올 때 아무 문제 없게 만드는 방법
+            // 1) 랩퍼클래스로 만든다.
+            // 2) @RequestParam를 사용한다. (채택)
+            // 3) int를 파싱한다.
 
         int result = a - b;
         model.addAttribute("result", result); // 뷰에 랜더링할 때 이 객체를 써라
@@ -117,12 +131,15 @@ public class HomeController {
 
 
 
+
+//ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ @ResponseBody 뷰로 랜더링하지 않고, 문자열 그 자체, 자료형 그 자체로 응답하는 것 해보기
+    // json 반환
     @GetMapping("/user.json")
     @ResponseBody // (뷰로 랜더링하지 않고, 문자열 그 자체로 응답하겠다.)
     public String user() throws IOException {
         return "{\"name\":\"Joe\",\"age\":18}";
     }
-
+    // map 반환
     @GetMapping("/userMap.json")
     @ResponseBody // Map이나 DTO를 반환하면, 자동으로 json으로
     public Map<String, Object> userMap() throws IOException {
@@ -134,7 +151,7 @@ public class HomeController {
         map.put("email", "asdfafd@gmail.com");
         return map;
     }
-
+    // dto클래스 만들어서 객체 반환
     @GetMapping("/userDto.json")
     @ResponseBody
     public UserDto userDto() {
@@ -155,12 +172,13 @@ public class HomeController {
 
 
 
+//ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ @PostMapping form태그를 post로 받았을 때
     @PostMapping("/signup.do")
     public String signup(
             @ModelAttribute UserDto userDto) { // @ModelAttribute을 써도 되고 안써도 됨
-        // 톰캣이었으면, form_post로 넘어온 매개변수를 모두 필드와 하고, 다시 set으로 설정해서 dto에 넣었어야 했는데.
-        // form의 name을 dto의 필드명과 맞춰서 해주면, 알아서 dto생성까지 자동화 됨.
-
+            // @ModelAttribute : 컨트롤러 메서드의 매개변수 앞에 @ModelAttribute를 사용하여 폼 데이터를 자동으로 바인딩할 수 있습니다.
+            // 톰캣이었으면, form_post로 넘어온 매개변수를 모두 필드 만들고 setter 받아서 dto에 넣었어야 했는데
+            // form의 name을 dto의 필드명과 맞춰서 해주면, 알아서 dto생성까지 자동화 됨.
 
         // html에서 input에 name만 dto 필드와 맞춰주면, 알아서 set~~메서드로 dto 객체의 필드값을 설정해줌
         // @ModelAttribute; 요청 파라미터를 바탕으로 모델 객체를 바인딩하고, 이를 컨트롤러 메서드의 매개변수로 사용
@@ -168,13 +186,15 @@ public class HomeController {
         // @RequestParam는 Map을 똑같이 맞춰서 넣어줌
         // (요청 파라미터를 메서드 매개변수에 바인딩할 때 사용됩니다. 예를 들어, URL 쿼리 파라미터를 메서드 파라미터로 받을 수 있습니다.)
 
+
         System.out.println(userDto);
+
         // action 페이지; 어떤 처리만 하고 뷰를 렌더링하지 않는 페이지
         // 주로 action 페이지는 처리만하고 리디렉트한다.
-
-        return "redirect:/";  // == resp.sendRedirect("/")
         // redirect: 접두사를 사용하면 브라우저가 서버로부터 리다이렉트 응답을 받아 해당 URL로 이동합니다.
         // 이는 클라이언트 측에서 새로운 요청을 생성하는 방식입니다.
+        return "redirect:/";  // == resp.sendRedirect("/")
+        // return "redirect:/emp/success.do"; 다른예시
     }
 
 

@@ -1,22 +1,27 @@
 <!DOCTYPE html>
+<html lang="ko">
+
 <!--
 Thymeleaf 템플릿 기본 설정
 Spring Boot는 /src/main/resources/templates 디렉토리에 있는 모든 HTML 파일을 기본 템플릿으로 사용하도록 설정합니다.
 이는 별도의 설정 없이도 Thymeleaf 템플릿을 인식할 수 있게 해 줍니다.
 -->
 
-<html lang="ko">
+<!--타임리프의 fragments 구현중-->
 <head th:replace = "fragments/headLink :: head"></head>
 <!--    :: head 란 fragments/headLink.html 문서에서 head태그만 불러오겠다.  -->
-
 <body>
 <header th:replace = "fragments/headerNav :: navbar"></header>
 
-<h1>Spring data mybatis(=session Factory)</h1>
 
-<p>dataSource: <span th:text = '${dept}'> </span></p>
+
 <hr>
+<h1>Spring data mybatis(=session Factory)</h1>
+<p>dataSource: <span th:text = '${dept}'> </span></p>
 
+
+
+<hr>
 <h2><a href="/emp/readAll.do">사원 리스트</a></h2>
 </body>
 </html>
