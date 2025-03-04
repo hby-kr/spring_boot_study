@@ -10,8 +10,8 @@ import java.time.LocalDate;
 @Data
 @Entity
 @Table(name = "titles")
-@IdClass(titleId.class)
-public class title {
+@IdClass(TitleId.class)
+public class Title {
 
     @Id
     @Column(name = "emp_no", nullable = false)
@@ -28,8 +28,9 @@ public class title {
     @Column(name = "to_date", nullable = false)
     LocalDate toDate;
 
-    @JoinColumn(name = "emp_no") // title기준에서 무슨 컬럼명으로 조인하게 되는지
+    // insertable = false, updatable = false ; 조인할 때만 쓰이지, inset나 update할 때는 쓰이는 것이 아냐.
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "emp_no", insertable = false, updatable = false) // title기준에서 무슨 컬럼명으로 조인하게 되는지
     @ToString.Exclude // ToString 메서드 동작할 때 employee 필드는 배제하라.
     @JsonBackReference // 객체를 문자열 json 형태로 바꾸는 것을 하지마라.
     private Employee employee;

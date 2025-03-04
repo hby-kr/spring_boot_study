@@ -14,20 +14,25 @@ import java.time.LocalDate;
 @Setter
 @Entity
 @Table(name = "salaries", schema = "employees")
+@IdClass(SalaryId.class)
 public class Salary {
-    @EmbeddedId
-    private SalaryId id;
 
-    @MapsId("empNo")
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "emp_no", nullable = false)
-    private Employee empNo;
+    @Id
+    @Column(name = "emp_no", nullable = false)
+    private Integer empNo;
+    @Id
+    @Column(name = "from_date", nullable = false)
+    private LocalDate fromDate;
 
     @Column(name = "salary", nullable = false)
     private Integer salary;
 
     @Column(name = "to_date", nullable = false)
     private LocalDate toDate;
+
+//    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+//    @JoinColumn(name = "emp_no", nullable = false)
+//    // @OnDelete(action = OnDeleteAction.CASCADE)
+//    private Employee empNo;
 
 }

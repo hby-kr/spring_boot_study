@@ -28,13 +28,15 @@ public class DeptEmp {
     private LocalDate toDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "dept_no") // DeptEmp 기준에서 무슨 컬럼명으로 조인하게 되는지
+    @JoinColumn(name = "dept_no", insertable = false, updatable = false) // DeptEmp 기준에서 무슨 컬럼명으로 조인하게 되는지
+    // insertable = false, updatable = false ; 조인할 때만 쓰이지, inset나 update할 때는 쓰이는 것이 아냐.
     @ToString.Exclude // ToString 메서드 동작할 때 employee 필드는 배제하라.
     @JsonBackReference // 객체를 문자열 json 형태로 바꾸는 것을 하지마라.
     private Department department;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn (name = "emp_no")
+    @JoinColumn (name = "emp_no", insertable = false, updatable = false)
+    // insertable = false, updatable = false ; 조인할 때만 쓰이지, inset나 update할 때는 쓰이는 것이 아냐.
     @ToString.Exclude // ToString 메서드 동작할 때 employee 필드는 배제하라.
     @JsonBackReference // 객체를 문자열 json 형태로 바꾸는 것을 하지마라.
     private Employee employee;

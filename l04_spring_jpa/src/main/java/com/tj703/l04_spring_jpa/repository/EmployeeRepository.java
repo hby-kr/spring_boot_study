@@ -1,16 +1,18 @@
 package com.tj703.l04_spring_jpa.repository;
 
 import com.tj703.l04_spring_jpa.entity.Employee;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface EmployeeRepository extends JpaRepository<Employee, Integer> {
-
+    Optional<Employee> findById(int id);
     // select e from Employee e where e.lastName =
     List<Employee> findByLastName (String lastName);
 
@@ -27,7 +29,35 @@ public interface EmployeeRepository extends JpaRepository<Employee, Integer> {
 
     @Query ("SELECT e.id, e.birthDate FROM Employee e WHERE cast(e.hireDate as string) LIKE concat(:hireDateStr, '%') ")
     List<Object[]> findByHireDateStartsWith(String hireDateStr);
-    
+
+
+    // fetch말고 그냥 join 해보기
+    // @OneToMany 나 @ManyToOne으로 조회를 정의했을 때 강제로 조인하는 방법
+    //@EntityGraph (attributePaths = {"salaries","titles"})
+    //Employee findWithSalaryById(int id) ;
+    /*
+    jpa에서는 (효율적이고 합리적인?) fetch 방식을 기본 조인방식으로 여긴다.
+    그러나 서비스 상황상 강제 조인을 해야할 필요가 있을 때,
+    @EntityGraph라는 기능을 써서 강제조인을 시키기 위한 기능이다.
+
+    1:n 조인을 한다는 것은 결과물의 행의 갯수가 곱하기 된다는 것을 뜻한다. 이럴 때 데이터의 중복이 계속 생길 것.
+    fetch은 필요시에 그부분만 검색하는 거니까 중복이 생기지 않음.
+    그러나 지금은 조인을 하려는 것. 그러면 중복을 없앨 수 있는 경우가 있을까? -> set 타입을 객체를 써라.
+
+    @EntityGraph (attributePaths = {"salaries"})는 강제로 조인하는 것인데,
+    그때 attributePaths의 값을 여럿 쓰면(=두개 이상 조인을 시키면), 계속해서 중복값이 나오게 될 것.
+    그래서 Set타입으로 설정해놓지 않으면, 자바에서는 오류를 발생시켜 버린다.
+
+    그런데 Set은 순서가 없잖아?
+    @OrderBy (value = "salary desc") // 인덱스가 없는 Set으로 자료를 받아도 순서 정렬해주기.
+    private Set<Salary> salaries = new LinkedHashSet<>();
+     LinkedHashSet (순서를 보장하는 Set. List처럼 사용가능) (cf. HashSet은 인덱스없고 중복제거)
+     기준잡기.
+     조인을 많이 안하면, List타입으로 해도 됨.
+     JPA에서 조인을 하면 Set타입으로 해서 LinkedHashSet을 사용해야 하고
+
+     */
+
 
 
 }

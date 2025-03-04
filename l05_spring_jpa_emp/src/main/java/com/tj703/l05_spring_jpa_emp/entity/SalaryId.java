@@ -14,6 +14,7 @@ import java.util.Objects;
 @Embeddable
 public class SalaryId implements java.io.Serializable {
     private static final long serialVersionUID = -1804633210700878272L;
+
     @Column(name = "emp_no", nullable = false)
     private Integer empNo;
 

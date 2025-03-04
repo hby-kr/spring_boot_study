@@ -31,12 +31,13 @@ public class DeptEmp {
     @Column(name = "to_date", nullable = false)
     private LocalDate toDate;
 
-    @JoinColumn(name = "emp_no", nullable = false)
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false) // @ManyToOne, 현재 기준에서 무슨 조인을 하게 되는지
+    //+ 조인의 방식을 fetch로 하겠다고 쓰는 것. 또한 fetch가 기본 조인방식으로 추천된다.
+    @JoinColumn(name = "emp_no", nullable = false) // 현재 기준에서 무슨 컬럼명으로 조인하게 되는지
     private Employee empNo;
 
-    @JoinColumn(name = "dept_no", nullable = false)
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "dept_no", nullable = false)
     private Department deptNo;
 
 }

@@ -28,7 +28,7 @@ public class Employee {
     @Column(name = "last_name", nullable = false, length = 16)
     private String lastName;
 
-    @Lob
+    //@Lob = 엔터티 클래스의 속성 중에서 큰 바이너리 데이터나 큰 문자열 데이터를 데이터베이스에 저장할 때 사용
     @Column(name = "gender", nullable = false)
     private String gender;
 

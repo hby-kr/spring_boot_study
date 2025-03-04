@@ -9,7 +9,7 @@ import java.time.LocalDate;
 
 @Data
 @Embeddable
-public class titleId implements Serializable {
+public class TitleId implements Serializable {
 
     @Column(name = "emp_no", nullable = false)
     private int empNo;
