@@ -34,6 +34,7 @@ public class EmpController {
         return "emp/findAll";
     }
 
+
     @GetMapping("/{empNo}/detail.do")
     public String detail(
             Model model,
@@ -45,13 +46,12 @@ public class EmpController {
     ) {
         Optional<Employee> empOpt = empService.readOne(empNo);
         Employee emp = empOpt.get(); // get()은 Optional 객체에 값이 있을 때 그 값을 반환하는 메서드.
-        if (emp == null) {
-            return "redirect:/emp/findAll.do";
-        } else {
+        if (emp != null) {
             model.addAttribute("emp", emp);
             return "emp/detail";
+        } else {
+            return "redirect:/emp/findAll.do";
         }
     }
-
 
 }

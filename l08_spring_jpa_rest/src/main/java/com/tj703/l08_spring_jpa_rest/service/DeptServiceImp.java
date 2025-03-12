@@ -32,7 +32,13 @@ public class DeptServiceImp implements DeptService {
 
     @Override
     @Transactional
-    public void remove(DeptEmpId deptEmpId) { deptEmpRepository.deleteById(deptEmpId);}
+    public void remove(DeptEmpId deptEmpId) {
+        DeptEmp existDeptEmp = entityManager.find(DeptEmp.class, deptEmpId);
+        if (existDeptEmp == null) {
+            throw new IllegalArgumentException("삭제할 리로스가 없습니다");
+        }
+        deptEmpRepository.deleteById(deptEmpId);
+    }
 
 
     @Override // 등록만 하는 메서드
