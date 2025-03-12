@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: l07_spring_jpa_emp_reivew
+  profiles:
+    include: dev_db
+
+logging:
+  level:
+    org.hibernate.orm.jdbc.bind: trace  # 쿼리 실행시 파라미터 보기\
+
+server:
+  port: 8181

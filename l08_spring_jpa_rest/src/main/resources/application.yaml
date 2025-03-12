@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: l08_spring_jpa_rest
+  profiles:
+    include: dev_db
+
+logging:
+  level:
+    org.hibernate.orm.jdbc.bind: trace   # 쿼리 실행시 파라미터 보기
+

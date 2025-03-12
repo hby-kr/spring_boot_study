@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>사원리스트</title>
+</head>
+<body>
+<h1>사원 리스트</h1>
+
+<table>
+    <tbody>
+    <tr th:each="emp : ${empPage.getContent()}">
+        <td th:text = "${emp.id}"></td>
+        <td th:text = "${emp.firstName} + ' ' + ${emp.LastName}  "></td>
+        <td th:text = "${#temporals.format(emp.birthDate, 'yyyy년 MM월 dd일')}"></td>
+        <td><a th:href = "@{'/emp/{id}/detail.do'(id=${emp.id})}">상세</a></td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tj703.l02_spring_mybatis.mapper.DeptManagerDao">
+  <resultMap id="BaseResultMap" type="com.tj703.l02_spring_mybatis.dto.DeptManager">
+    <id column="emp_no" jdbcType="INTEGER" property="empNo" />
+    <id column="dept_no" jdbcType="CHAR" property="deptNo" />
+    <result column="from_date" jdbcType="DATE" property="fromDate" />
+    <result column="to_date" jdbcType="DATE" property="toDate" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    emp_no, dept_no, from_date, to_date
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="com.tj703.l02_spring_mybatis.dto.DeptManagerKey" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from dept_manager
+    where emp_no = #{empNo,jdbcType=INTEGER}
+      and dept_no = #{deptNo,jdbcType=CHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.tj703.l02_spring_mybatis.dto.DeptManagerKey">
+    delete from dept_manager
+    where emp_no = #{empNo,jdbcType=INTEGER}
+      and dept_no = #{deptNo,jdbcType=CHAR}
+  </delete>
+  <insert id="insert" keyColumn="emp_no" keyProperty="empNo" parameterType="com.tj703.l02_spring_mybatis.dto.DeptManager" useGeneratedKeys="true">
+    insert into dept_manager (dept_no, from_date, to_date
+      )
+    values (#{deptNo,jdbcType=CHAR}, #{fromDate,jdbcType=DATE}, #{toDate,jdbcType=DATE}
+      )
+  </insert>
+  <insert id="insertSelective" keyColumn="emp_no" keyProperty="empNo" parameterType="com.tj703.l02_spring_mybatis.dto.DeptManager" useGeneratedKeys="true">
+    insert into dept_manager
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="deptNo != null">
+        dept_no,
+      </if>
+      <if test="fromDate != null">
+        from_date,
+      </if>
+      <if test="toDate != null">
+        to_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="deptNo != null">
+        #{deptNo,jdbcType=CHAR},
+      </if>
+      <if test="fromDate != null">
+        #{fromDate,jdbcType=DATE},
+      </if>
+      <if test="toDate != null">
+        #{toDate,jdbcType=DATE},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tj703.l02_spring_mybatis.dto.DeptManager">
+    update dept_manager
+    <set>
+      <if test="fromDate != null">
+        from_date = #{fromDate,jdbcType=DATE},
+      </if>
+      <if test="toDate != null">
+        to_date = #{toDate,jdbcType=DATE},
+      </if>
+    </set>
+    where emp_no = #{empNo,jdbcType=INTEGER}
+      and dept_no = #{deptNo,jdbcType=CHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tj703.l02_spring_mybatis.dto.DeptManager">
+    update dept_manager
+    set from_date = #{fromDate,jdbcType=DATE},
+      to_date = #{toDate,jdbcType=DATE}
+    where emp_no = #{empNo,jdbcType=INTEGER}
+      and dept_no = #{deptNo,jdbcType=CHAR}
+  </update>
+</mapper>

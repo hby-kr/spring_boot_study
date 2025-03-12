@@ -6,6 +6,7 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.annotation.PropertySources;
 
 @SpringBootApplication
+// # DB 계정정보 따로 관리하는 방법 1
 @PropertySources(@PropertySource("classpath:/env.properties"))
 public class L05SpringJpaEmpApplication {
 

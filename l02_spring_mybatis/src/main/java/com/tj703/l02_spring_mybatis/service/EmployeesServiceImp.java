@@ -15,7 +15,7 @@ public class EmployeesServiceImp implements EmployeesService {
     private EmployeesMapper empMapper;
     // 생성자에 변수로 넣으면, @Autowired 안써도 됨
     // public EmployeesServiceImp(EmployeesMapper empMapper) { this.empMapper = empMapper;}
-
+    // 이것과 같은 적용을 시킨 것임.
 
     @Override
     public List<Employees> readAll() {

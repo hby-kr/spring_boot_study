@@ -15,7 +15,7 @@ import java.util.*;
 @Getter
 @Setter
 @Entity
-@Table(name = "employees") // employee라고 지었으니까 연결시켜주는 것
+@Table(name = "employees") // 여기서 employee라고 지었으니까 연결시켜주는 것
 public class Employee implements Serializable {
     @Id
     @Column(name = "emp_no", nullable = false)
